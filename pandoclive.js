@@ -9,27 +9,22 @@ const pdc = require('pdc')
 
 
 bs.watch('src/*.*', function (event, file) {
-  fs.readFile(file, 'utf-8', (err, contents) => {
-    if (err) throw err
-    if (contents.length !== 0) {
-      pdc(contents, 'markdown', 'html', ['-H', 'style.css'], function (err, result) {
-        if (err) throw err;
+  setTimeout(() => {
+    const contents= fs.readFile(file, 'utf-8')
 
-
-        fs.writeFile('app/index.html', result, (err) => {
+  contents.then(value => {
+    console.log(value.length)
+    pdc(value, 'markdown', 'html', ['-H', 'style.css'], function (err, result) {
           if (err) throw err;
-          bs.reload('*.html')
-        })
-
-      })
-    }
-
-
+          fs.writeFile('app/index.html', result).then(value => bs.reload()).catch(err => console.log(err))
+    })
   })
+},200)
 })
 
 
 // ['--standalone', '-H', 'style.css']// start server 
 bs.init({
   server: './app'
-});
+}); 
+
