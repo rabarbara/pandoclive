@@ -5,16 +5,16 @@ const pdc = require('pdc')
 
 
 
+const filename = process.argv[2] || null
 
 
-
-bs.watch('src/*.*', function (event, file) {
+bs.watch(`src/filename.*`, function (event, file) {
   setTimeout(() => {
     const contents= fs.readFile(file, 'utf-8')
 
   contents.then(value => {
     console.log(value.length)
-    pdc(value, 'markdown', 'html', ['-H', 'style.css'], function (err, result) {
+    pdc(value, 'markdown', 'html', ['-H', 'style.css', '--data-dir='], function (err, result) {
           if (err) throw err;
           fs.writeFile('app/index.html', result).then(value => bs.reload()).catch(err => console.log(err))
     })
