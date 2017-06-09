@@ -8,7 +8,9 @@ const pdc = require('pdc')
 const filename = process.argv[2] || null
 
 
-bs.watch(`src/filename.*`, function (event, file) {
+bs.watch(`src/${filename}.*`, function (event, file) {
+  // as the file is saved, it is temporarily empty and the save works only when it is done twice
+  // hence the timeout to make sure the file is not being written
   setTimeout(() => {
     const contents= fs.readFile(file, 'utf-8')
 
@@ -19,11 +21,9 @@ bs.watch(`src/filename.*`, function (event, file) {
           fs.writeFile('app/index.html', result).then(value => bs.reload()).catch(err => console.log(err))
     })
   })
-},200)
+}, 200)
 })
 
-
-// ['--standalone', '-H', 'style.css']// start server 
 bs.init({
   server: './app'
 }); 
